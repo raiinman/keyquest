@@ -1,66 +1,98 @@
-# Key Quest Restoration
+# Key Quest Recovery Project
 
-This repository now contains two deliberately separate lanes:
+A technical preservation and recovery effort focused on determining how much of the original Neopets Key Quest client still survives and what is required to make it playable in a modern browser.
 
-- **Modern Alpha** — a clean-room, current-browser implementation of one complete deterministic local match.
-- **Preservation** — the read-only Ruffle proof harness for the surviving historical bootstrap SWF.
+## Milestone 0 — Proof of life
 
-Live alpha: <https://keyquest.deadsignaldb.com>
+The first target is intentionally narrow: fetch the historical Key Quest client from Neopets' public CDN at runtime and attempt to boot it in current Chrome through Ruffle.
 
-## Playable alpha status
+Historical client URL:
 
-The alpha acceptance gate passed in current Chrome on 2026-09-14. A user can:
+```text
+https://images.neopets.com/keyquest/game/kq2/KeyQuest.swf?v=32
+```
 
-1. create a local/mock identity;
-2. start a 2–4 player match with local bots;
-3. roll deterministic dice;
-4. move across a board graph and choose a branch;
-5. resolve key, points, event, power-up, and portal spaces;
-6. collect Red, Blue, and Gold keys;
-7. unlock the exit;
-8. reach final standings and a simulated Vault reward.
-
-The scenario seed is `KQ-ALPHA-001`. Match events are sequence-numbered and exportable for debugging.
+This repository does **not** bundle Neopets SWFs, artwork, audio, account credentials, or other proprietary assets.
 
 ## Safety boundary
 
-The alpha uses browser-local identity and reward state only. It contains no Neopets credentials and no write-capable Neopets integration. Live Neopoints, inventory, prize redemption, account changes, and production matchmaking are disabled.
+The recovery harness is deliberately read-only:
 
-The Preservation lane may fetch the public historical bootstrap client through the AppDeploy backend. It does not forward cookies or authentication and does not emulate or contact the retired ElectroServer endpoints.
+- only `GET` and `HEAD` are proxied;
+- only `https://images.neopets.com/` is permitted;
+- no Neopets login cookies are sent;
+- no score submission, Neopoints award, item award, prize redemption, or account modification exists;
+- network observations are written to a recovery ledger/log.
 
-## Source layout
+The point is to make the client run far enough to identify what survives, what is missing, and what backend behavior must be reconstructed.
+
+## Run locally
+
+Requires Node.js 18+ and a current Chrome/Edge build.
+
+```powershell
+npm start
+```
+
+Then open:
 
 ```text
-apps/web/                 AppDeploy source snapshot and playable alpha
-  backend/index.ts        Read-only historical-client fetch endpoint
-  src/game.js             Renderer-independent deterministic match engine
-  src/main.js             Browser UI and Preservation lane
-  src/styles.css          Responsive alpha presentation
-  tests/                  Deployment acceptance contract
-docs/                     Authority, recovery, architecture, and verification
-tools/recovery/           Public-safe recovery utilities (no proprietary binaries)
+http://127.0.0.1:8787
 ```
 
-## Run the modern alpha locally
+Click **Boot original client**.
 
-```powershell
-cd apps/web
-npm install
-npm run dev
+## Deploy to cPanel / keyquest.deadsignaldb.com
+
+The same frontend can run on ordinary Apache/PHP hosting. No Node application is required for the first hosted proof.
+
+The document root for `keyquest.deadsignaldb.com` should contain the contents of this repository, especially:
+
+```text
+.htaccess
+index.html
+proxy.php
 ```
 
-The match engine has dependency-free Node tests:
+Apache rewrites requests such as:
 
-```powershell
-cd apps/web
-npm test
+```text
+/neo/keyquest/game/kq2/KeyQuest.swf?v=32
 ```
 
-## Project scope
+to the read-only PHP proxy. The proxy then fetches the matching public resource from `images.neopets.com` without forwarding login cookies or allowing write methods.
 
-This is an engineering alpha, not the complete Key Quest restoration. Multiplayer services, the full historical board/content catalog, minigames, alignments, cards, chat, Collector's Case, reconnects, persistence, and official account/reward adapters remain future work. See `docs/PROJECT_RECONCILIATION.md` for the full accounting.
+### Preferred deployment
 
-## Proprietary assets
+If cPanel offers **Git Version Control**, clone:
 
-Do not commit Neopets SWFs, artwork, audio, or other proprietary binaries to this public repository. Public recovery code, manifests, hashes, and reproducible observations are welcome; redistribution requires rights-holder authorization.
+```text
+https://github.com/raiinman/keyquest.git
+```
 
+into the document root assigned to `keyquest.deadsignaldb.com`. Future updates can then be deployed with a Git pull instead of manual FTP uploads.
+
+If Git Version Control is unavailable, upload the repository files to the subdomain document root with SFTP/FTP or cPanel File Manager.
+
+### Hosting requirements
+
+- Apache `mod_rewrite` enabled
+- PHP 7.4+ recommended
+- PHP cURL extension enabled
+- HTTPS enabled for the subdomain
+
+## Recovery classifications
+
+Every discovered dependency should ultimately be classified as one of:
+
+- `SURVIVES`
+- `MISSING`
+- `BACKEND_REQUIRED`
+- `RUFFLE_INCOMPATIBILITY`
+- `UNKNOWN`
+
+See `docs/RECOVERY_LEDGER.md` for the evidence ledger.
+
+## Project rule
+
+Do not add write-capable Neopets production integration. A future official integration should require explicit Neopets authorization and separate production credentials.

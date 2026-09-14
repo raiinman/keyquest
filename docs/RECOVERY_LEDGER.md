@@ -27,12 +27,6 @@ This ledger records what survives, what fails, and what must be reconstructed. E
 | KQ-PROXY-001 | Read-only CDN compatibility proxy | GitHub `server.mjs` / `proxy.php` | SURVIVES | GET/HEAD only, `images.neopets.com` only, no cookies/auth forwarding. |
 | KQ-DEPLOY-001 | Public recovery harness | AppDeploy + custom domain | SURVIVES | `keyquest.deadsignaldb.com` active and verified. This is proof-of-life only, not a playable game. |
 
-| KQ-CONFIG-002 | `KeyQuest.xml` server topology | Direct 2026-09-14 parse | BACKEND_REQUIRED | Default `kq2`; retired hosts keyquest-5/6.neopets.com on ports 9875, 443, and 80. The kq1 set names keyquest-2/3. |
-| KQ-CLIENT-004 | `KQStarter.swf` next-stage graph | In-memory string extraction | BACKEND_REQUIRED | Recovers `Lobby.swf`, ElectroServer 4, binary protocol classes, create/join/find-game messages, and “All servers failed”. |
-| KQ-ALPHA-001 | Deterministic local match | AppDeploy snapshot 1789369130017 + Chrome acceptance | SURVIVES | Four-player flow completed lobby → three keys → branch → exit → event 090 results. |
-| KQ-ALPHA-002 | Clockwork Crossroads board graph | `apps/web/src/game.js` | SURVIVES | One clean-room topology with main loop, alternate branch, key/points/event/power-up/portal/exit spaces. |
-| KQ-ALPHA-003 | Mock reward hard stop | Live results screen + engine test | SURVIVES | Gold key/local points/mock item only; `productionWrite: false` and no write-capable Neopets adapter. |
-
 ## Unresolved classes
 
 The following are not yet sufficiently inventoried to mark individually: board SWFs/assets, board topologies, minigame resources, token/character catalogs, power-ups, cards/events, alignments/hexes, audio, historical prize pools, chat data, full backend service methods, game server endpoints, and reward/account integration behavior.
@@ -51,10 +45,6 @@ Classification:
 Required by:
 Notes:
 ```
-
-## Playable alpha result
-
-Playable ALPHA PASSED on 2026-09-14. The live custom domain completes a deterministic local match in current Chrome. See `ALPHA_ACCEPTANCE.md` and `ARCHITECTURE_DECISION_001_ALPHA_PATH.md`.
 
 ## Milestone 0 result
 

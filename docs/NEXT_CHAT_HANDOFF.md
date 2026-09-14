@@ -1,4 +1,4 @@
-# NEXT CHAT HANDOFF — Key Quest Post-Alpha
+# NEXT CHAT HANDOFF — Key Quest Alpha
 
 Date: 2026-09-13
 Repository: `raiinman/keyquest`
@@ -15,11 +15,9 @@ Local working copy: `C:\Users\mikea\Documents\keyquest`
 
 Do not reduce the project back to “prove the SWF boots.” Milestone 0 is already complete.
 
-## Current executable gate
+## Primary objective for the next chat
 
-**Playable Key Quest ALPHA achieved on 2026-09-14.**
-
-The next objective is to harden the alpha foundation and expand rule/content fidelity without regressing the verified start-to-results flow.
+**Get a playable Key Quest ALPHA running.**
 
 “Playable alpha” means a user can open the project in a current browser and complete at least one deterministic local match flow using reconstructed/mock backend state, without touching Neopets production account/reward systems.
 
@@ -76,7 +74,7 @@ The original client currently stops after bootstrap because its historical backe
 
 ### GitHub
 
-GitHub is canonical for the deployed alpha source. `apps/web` mirrors the tested AppDeploy implementation, and public-safe recovery tooling/evidence is committed. Proprietary SWFs remain local and ignored.
+GitHub is **not yet fully canonical**. It contains the original recovery harness and corrected docs, but does not contain the newer AppDeploy implementation or all local analysis tooling.
 
 Important committed docs:
 
@@ -86,11 +84,11 @@ Important committed docs:
 
 ### AppDeploy
 
-The frontend+backend playable alpha is deployed and active at:
+A separate frontend+backend recovery harness is deployed and active at:
 
 `https://keyquest.deadsignaldb.com`
 
-Modern Alpha is the default playable route. Preservation mode separately fetches the surviving original client server-side and executes it through Ruffle. Custom domain is active/verified.
+It fetches the surviving original client server-side and executes it through Ruffle. Custom domain is active/verified.
 
 AppDeploy rejected attempts to rewrite/intercept the original legacy auth-style AMF gateway. Do not treat that as a project-level blocker; it is a constraint of that hosting path.
 
