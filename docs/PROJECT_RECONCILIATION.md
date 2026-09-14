@@ -14,7 +14,7 @@ Milestone 0 (proof-of-life) succeeded, but the overall project was incorrectly n
 
 | Requirement | Status | Evidence / current reality |
 |---|---|---|
-| Fully playable Key Quest in a current browser | PARTIAL | Original preloader SWF executes in Chrome/Ruffle, but no playable lobby, board, match, minigames, or end-to-end game exists. |
+| Fully playable Key Quest in a current browser | PARTIAL | Original bootstrap and authentic lobby presentation execute in Chrome/Ruffle; the waiting-area and metagame modules survive, but no local board payload, playable match, or end-to-end game exists yet. |
 | Normal URL with no Flash installation | PARTIAL | Hosted Ruffle harness works at keyquest.deadsignaldb.com; only proof-of-life is functional. |
 | Public custom domain | IMPLEMENTED | keyquest.deadsignaldb.com is active and verified through AppDeploy. |
 | TNT pitch-ready working restoration | MISSING | No end-to-end match, multiplayer, Vault, prize simulation, or pitch flow exists. |
@@ -82,8 +82,8 @@ Milestone 0 (proof-of-life) succeeded, but the overall project was incorrectly n
 
 | Requirement | Status | Evidence / current reality |
 |---|---|---|
-| Create/join lobby | MISSING | No lobby implementation. |
-| Quick Play/private room | MISSING | No matchmaking implementation. |
+| Create/join lobby | PARTIAL | Authentic original lobby UI and controllers survive and render locally; local ElectroServer responses and navigation fixtures are not implemented. |
+| Quick Play/private room | PARTIAL | Original Quick Game/create/join controls survive; deterministic local matchmaking behavior is not implemented. |
 | Up to four players | MISSING | No multiplayer implementation. |
 | Realtime chat/scripted chat | MISSING | URL discovered; no chat implementation. |
 | Token selection | MISSING | No gameplay UI/state. |
