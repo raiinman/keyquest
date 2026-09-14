@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Key Quest Recovery Harness</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, system-ui, Arial, sans-serif; }
+    body { margin: 0; background: #0d1117; color: #e6edf3; }
+    header { padding: 16px 20px; border-bottom: 1px solid #30363d; display:flex; gap:16px; align-items:center; justify-content:space-between; }
+    h1 { margin:0; font-size:18px; }
+    .badge { padding:5px 9px; border:1px solid #3d444d; border-radius:999px; font-size:12px; color:#9da7b3; }
+    main { display:grid; grid-template-columns:minmax(0, 1fr) 380px; gap:14px; padding:14px; min-height:calc(100vh - 70px); box-sizing:border-box; }
+    #player-wrap { min-height:640px; border:1px solid #30363d; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    ruffle-player { width:100%; height:100%; min-height:640px; }
+    aside { border:1px solid #30363d; background:#161b22; padding:14px; overflow:auto; }
+    button { background:#238636; color:white; border:0; border-radius:6px; padding:9px 12px; font-weight:700; cursor:pointer; }
+    button.secondary { background:#30363d; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+    #status { padding:10px; background:#0d1117; border:1px solid #30363d; margin-bottom:12px; white-space:pre-wrap; font-size:12px; }
+    #log { font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace; white-space:pre-wrap; color:#b6c2cf; min-height:300px; }
+    small { color:#8b949e; display:block; margin-top:8px; }
+    code { color:#d2a8ff; }
+    @media (max-width: 900px) { main { grid-template-columns:1fr; } #player-wrap, ruffle-player { min-height:500px; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>KEY QUEST // RECOVERY HARNESS</h1>
+  <span class="badge">READ-ONLY PROOF OF LIFE</span>
+</header>
+<main>
+  <section id="player-wrap"><div>Press <b>Boot original client</b>.</div></section>
+  <aside>
+    <div class="row">
+      <button id="boot">Boot original client</button>
+      <button class="secondary" id="clear">Clear log</button>
+    </div>
+    <div id="status">Idle.</div>
+    <div id="log"></div>
+    <small>
+      This harness does not write to Neopets. The local proxy permits only GET/HEAD and records requests to
+      <code>recovery-ledger.jsonl</code>.
+    </small>
+  </aside>
+</main>
+
+<script>
+window.RufflePlayer = window.RufflePlayer || {};
+window.RufflePlayer.config = {
+  autoplay: "on",
+  unmuteOverlay: "visible",
+  allowNetworking: "all",
+  allowScriptAccess: false,
+  compatibilityRules: true,
+  upgradeToHttps: true,
+  logLevel: "info",
+  showSwfDownload: false,
+  contextMenu: true,
+  quality: "high",
+  urlRewriteRules: [
+    [/^https:\/\/images\.neopets\.com\/(.*)$/i, "/neo/$1"],
+    [/^http:\/\/images\.neopets\.com\/(.*)$/i, "/neo/$1"]
+  ]
+};
+</script>
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+<script>
+const statusEl = document.getElementById("status");
+const logEl = document.getElementById("log");
+let player = null;
+
+function log(line) {
+  const stamp = new Date().toISOString().slice(11, 23);
+  logEl.textContent += `[${stamp}] ${line}\n`;
+  logEl.scrollTop = logEl.scrollHeight;
+}
+function status(line) { statusEl.textContent = line; }
+
+async function boot() {
+  const wrap = document.getElementById("player-wrap");
+  wrap.innerHTML = "";
+  const ruffle = window.RufflePlayer.newest();
+  player = ruffle.createPlayer();
+  player.style.width = "100%";
+  player.style.height = "100%";
+  wrap.appendChild(player);
+
+  const api = player.ruffle();
+  api.setTraceObserver((message) => log(`TRACE ${message}`));
+  api.addFSCommandHandler((command, args) => log(`FSCOMMAND ${command} ${args || ""}`));
+
+  status("Fetching original KeyQuest.swf through the read-only proxy…");
+  log("BOOT /neo/keyquest/game/kq2/KeyQuest.swf?v=32");
+
+  try {
+    await api.load({
+      url: "/neo/keyquest/game/kq2/KeyQuest.swf?v=32",
+      base: "https://images.neopets.com/keyquest/game/kq2/",
+      allowNetworking: "all",
+      allowScriptAccess: false,
+      compatibilityRules: true,
+      upgradeToHttps: true,
+      logLevel: "info"
+    });
+    status("Original SWF accepted by Ruffle. Watch the player and request ledger for the next dependency/failure.");
+    log("Ruffle load() resolved.");
+    setTimeout(() => {
+      try {
+        const md = api.metadata;
+        if (md) log("METADATA " + JSON.stringify(md));
+      } catch (e) { log("Metadata unavailable: " + e); }
+    }, 1500);
+  } catch (e) {
+    status("Boot failed. Check the log and server ledger; this is now an exact, reproducible failure point.");
+    log("BOOT ERROR " + (e?.stack || e));
+  }
+}
+
+document.getElementById("boot").addEventListener("click", boot);
+document.getElementById("clear").addEventListener("click", () => logEl.textContent = "");
+</script>
+</body>
+</html>
