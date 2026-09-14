@@ -1,0 +1,53 @@
+# Tests
+
+## Test 1 - Complete the deterministic local alpha match [acceptance]
+Viewport: desktop
+Covers: mock identity, 2-4 player lobby, dice, bot turns, branching path, three keys, exit, results, simulated reward, deterministic event log
+Description: Proves the playable alpha reaches results instead of stopping at a loader.
+
+Steps:
+1. Enter "Alpha Tester" as Local identity
+2. Keep 4 players selected and click "Start local match"
+3. Click "Roll dice" on every human turn
+4. When prompted, click "Sunlit path"
+5. Continue until the results screen appears
+6. Read the result and hard-stop panel
+
+Expected: Alpha Tester collects Red, Blue, and Gold keys, returns to EXIT, and sees MATCH COMPLETE with a Gold mock Vault key and "PRODUCTION WRITE: DISABLED".
+
+## Test 2 - Inspect deterministic log [acceptance]
+Viewport: desktop
+Covers: stable seed and event-sourced debugging log
+Description: Confirms the test scenario exposes its seed and ordered events.
+
+Steps:
+1. Start a 2-player match
+2. Roll once
+3. Read the board header and deterministic log
+
+Expected: Seed is KQ-ALPHA-001 and log events have increasing sequence numbers including match.start, turn.start, dice.roll, move.step, and space.key.
+
+## Test 3 - Verify production boundary [safety]
+Viewport: mobile
+Covers: no Neopets identity, reward, or inventory writes
+Description: Confirms the safety boundary is visible before and after play.
+
+Steps:
+1. Read the lobby safety copy
+2. Complete a 2-player match
+3. Read the results hard-stop panel
+
+Expected: Lobby requires only a local display name. Results state that production writes are disabled and the reward exists only in the browser session.
+
+## Test 4 - Retain original-client proof-of-life [preservation]
+Viewport: desktop
+Covers: Milestone 0 retained separately from the playable alpha
+Description: Confirms the historical bootstrap remains available without becoming the product route.
+
+Steps:
+1. Click "Preservation"
+2. Click "Verify source"
+3. Read the preservation status
+
+Expected: Public SWF source reports SURVIVES with a positive byte count and the page explains that the legacy backend is disconnected.
+

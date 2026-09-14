@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+dist/
+test-results/
+playwright-report/
+
+# Local recovery captures and generated evidence
+captures/
+*.png
+recovery-ledger.jsonl
+_inline_*.js
+
+# Proprietary recovered binaries stay local unless rights are granted
+*.swf
+*.flv
+
+# Local environment
+.env
+.env.*
+!.env.example
+
