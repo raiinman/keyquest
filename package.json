@@ -1,0 +1,13 @@
+{
+  "name": "keyquest-recovery-harness",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Read-only browser recovery harness for the historical Key Quest client",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
