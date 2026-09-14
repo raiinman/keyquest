@@ -19,3 +19,14 @@ _inline_*.js
 .env.*
 !.env.example
 
+
+# Superseded root-level recovery experiments retained on the authorized PC
+extract-kq.cjs
+extract_scripts.py
+index-dev.html
+index-patched.html
+kq-amf-capture.spec.cjs
+kq-smoke.spec.cjs
+playwright.config.cjs
+server-dev.mjs
+smoke2.spec.cjs
