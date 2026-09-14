@@ -10,14 +10,26 @@ This ledger records what survives, what fails, and what must be reconstructed. E
 - `RUFFLE_INCOMPATIBILITY` — resource exists, but Ruffle cannot currently reproduce the required Flash behavior.
 - `UNKNOWN` — insufficient evidence.
 
-## Initial records
+## Verified records
 
 | ID | Component | Evidence | Status | Notes |
 |---|---|---|---|---|
-| KQ-CLIENT-001 | `KeyQuest.swf?v=32` | Historical Neopets CDN URL | UNKNOWN | First runtime target. Must verify actual body/content through harness. |
-| KQ-WEB-001 | Key Quest public web pages | Neopets public site | SURVIVES | Historical supporting pages remain publicly reachable in part. |
-| KQ-RUNTIME-001 | Modern browser execution | Ruffle harness | UNKNOWN | Chrome/Edge proof pending first hosted/local boot. |
-| KQ-PROXY-001 | Read-only CDN compatibility proxy | This repository | SURVIVES | Node and cPanel/PHP paths implemented. |
+| KQ-CLIENT-001 | `KeyQuest.swf?v=32` | Neopets CDN + local recovery ledger + hosted AppDeploy harness | SURVIVES | HTTP 200, `application/x-shockwave-flash`, 10,796 bytes. Ruffle accepts and executes it. |
+| KQ-CLIENT-002 | `KQFonts.swf` | Local recovery ledger | SURVIVES | HTTP 200, `application/x-shockwave-flash`, 237,968 bytes. |
+| KQ-CONFIG-001 | `KeyQuest.xml` | Local recovery ledger | SURVIVES | HTTP 200, `text/xml`, 617 bytes. Content still needs project-level parsing/provenance. |
+| KQ-CLIENT-003 | `KQStarter.swf` | Local recovery ledger | SURVIVES | HTTP 200, `application/x-shockwave-flash`, 171,658 bytes. |
+| KQ-RUNTIME-001 | Modern browser execution | Ruffle 0.6.0 local + hosted proof | SURVIVES | Original SWF loaded as Flash 10 / AS3, 980x630, 31 FPS. |
+| KQ-BACKEND-001 | NeoPet AMFPHP gateway | Original SWF runtime/string evidence | BACKEND_REQUIRED | Client references `http://www.neopets.com/amfphp/gateway.php`; current restoration has no compatible service implementation. |
+| KQ-SERVICE-001 | `KeyQuestGameService.getPwUserName` | Original SWF string extraction | BACKEND_REQUIRED | Service name recovered; request/response contract not reconstructed. |
+| KQ-SERVICE-002 | `KeyQuestGameService.logAppStart` | Original SWF string extraction | BACKEND_REQUIRED | Service name recovered; contract not reconstructed. |
+| KQ-SERVICE-003 | `KeyQuestGameService.logPageView` | Original SWF string extraction | BACKEND_REQUIRED | Service name recovered; contract not reconstructed. |
+| KQ-WEB-001 | Key Quest public web pages | Neopets public site research | SURVIVES | About/tutorial/redeem/whatis and supporting documentation remain reachable in part; full manifest not yet committed. |
+| KQ-PROXY-001 | Read-only CDN compatibility proxy | GitHub `server.mjs` / `proxy.php` | SURVIVES | GET/HEAD only, `images.neopets.com` only, no cookies/auth forwarding. |
+| KQ-DEPLOY-001 | Public recovery harness | AppDeploy + custom domain | SURVIVES | `keyquest.deadsignaldb.com` active and verified. This is proof-of-life only, not a playable game. |
+
+## Unresolved classes
+
+The following are not yet sufficiently inventoried to mark individually: board SWFs/assets, board topologies, minigame resources, token/character catalogs, power-ups, cards/events, alignments/hexes, audio, historical prize pools, chat data, full backend service methods, game server endpoints, and reward/account integration behavior.
 
 ## Runtime evidence template
 
@@ -34,11 +46,6 @@ Required by:
 Notes:
 ```
 
-## Milestone 0 acceptance test
+## Milestone 0 result
 
-Milestone 0 passes when at least one of these outcomes is reproducibly demonstrated:
-
-1. The original Key Quest client is accepted by Ruffle and begins execution in current Chrome/Edge; or
-2. The original client reaches a deterministic failure with the exact missing dependency or unsupported runtime behavior identified.
-
-Either outcome advances the reconstruction because it replaces speculation with a concrete dependency chain.
+Milestone 0 PASSED: the original Key Quest client is reproducibly accepted by Ruffle and begins execution in a current Chromium browser. The next project gate is no longer “does the client survive?”; it is reconstruction of the startup/backend contract and continued dependency inventory.
