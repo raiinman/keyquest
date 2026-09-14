@@ -26,7 +26,7 @@ if ($method !== 'GET' && $method !== 'HEAD') {
 $path = isset($_GET['path']) ? (string)$_GET['path'] : '';
 $path = ltrim($path, '/');
 
-if ($path === '' || str_contains($path, '..') || preg_match('/[\\\x00-\x1F\x7F]/', $path)) {
+if ($path === '' || strpos($path, '..') !== false || preg_match('/[\\\x00-\x1F\x7F]/', $path)) {
     http_response_code(400);
     header('Content-Type: text/plain; charset=utf-8');
     echo "Invalid path.\n";
