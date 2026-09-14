@@ -22,7 +22,7 @@ The recovery harness is deliberately read-only:
 - only `https://images.neopets.com/` is permitted;
 - no Neopets login cookies are sent;
 - no score submission, Neopoints award, item award, prize redemption, or account modification exists;
-- network observations are written to a local recovery ledger.
+- network observations are written to a recovery ledger/log.
 
 The point is to make the client run far enough to identify what survives, what is missing, and what backend behavior must be reconstructed.
 
@@ -41,6 +41,45 @@ http://127.0.0.1:8787
 ```
 
 Click **Boot original client**.
+
+## Deploy to cPanel / keyquest.deadsignaldb.com
+
+The same frontend can run on ordinary Apache/PHP hosting. No Node application is required for the first hosted proof.
+
+The document root for `keyquest.deadsignaldb.com` should contain the contents of this repository, especially:
+
+```text
+.htaccess
+index.html
+proxy.php
+```
+
+Apache rewrites requests such as:
+
+```text
+/neo/keyquest/game/kq2/KeyQuest.swf?v=32
+```
+
+to the read-only PHP proxy. The proxy then fetches the matching public resource from `images.neopets.com` without forwarding login cookies or allowing write methods.
+
+### Preferred deployment
+
+If cPanel offers **Git Version Control**, clone:
+
+```text
+https://github.com/raiinman/keyquest.git
+```
+
+into the document root assigned to `keyquest.deadsignaldb.com`. Future updates can then be deployed with a Git pull instead of manual FTP uploads.
+
+If Git Version Control is unavailable, upload the repository files to the subdomain document root with SFTP/FTP or cPanel File Manager.
+
+### Hosting requirements
+
+- Apache `mod_rewrite` enabled
+- PHP 7.4+ recommended
+- PHP cURL extension enabled
+- HTTPS enabled for the subdomain
 
 ## Recovery classifications
 
