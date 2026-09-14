@@ -41,6 +41,10 @@ Minimum alpha acceptance target:
 
 This is an engineering alpha, not content-complete Key Quest. Do not pretend missing systems are finished; mark them and keep the original full scope intact.
 
+### Fidelity gate
+
+A generic board game that merely satisfies mechanical checklist items is not Key Quest and must never be labeled or deployed as the alpha. The playable path must use the recovered original client/presentation wherever it survives. Any reconstructed layer must be visibly and behaviorally faithful to documented Key Quest evidence, identify what is reconstructed, and preserve behavior provenance. Do not invent replacement board names, art direction, tokens, terminology, or rules.
+
 ## What is already proven
 
 The original public Key Quest bootstrap client survives and executes in current Chrome through Ruffle.
@@ -51,6 +55,11 @@ Verified surviving resources from the local recovery ledger:
 - `KQFonts.swf` — HTTP 200, Flash, 237,968 bytes
 - `KeyQuest.xml` — HTTP 200, XML, 617 bytes
 - `KQStarter.swf` — HTTP 200, Flash, 171,658 bytes
+- `Lobby.swf` — HTTP 200, Flash, 1,148,444 bytes; authentic lobby UI and flows embedded
+- `games/WaitingArea.swf` — HTTP 200, Flash, 1,246,657 bytes; authentic waiting room and EUP renderer embedded
+- `games/KeyquestMetaGame.swf` — HTTP 200, Flash, 3,056,432 bytes; authentic board client, event handling, overlays, and results UI embedded
+
+The server historically supplied compressed EUP board data as `WORLD_BYTES` and `AREA_BYTES`. Recovering or faithfully reconstructing one such board payload is the current critical path; it is not justification to replace the surviving client with a generic game.
 
 Observed client metadata:
 

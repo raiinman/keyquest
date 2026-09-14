@@ -1,0 +1,20 @@
+# Dependencies and test output
+node_modules/
+test-results/
+*.png
+
+# Private recovered Neopets binaries and decompilation output
+recovery-private/
+*.swf
+
+# Local recovery experiments and captures
+captures/
+recovery-ledger.jsonl
+_inline_*.js
+index-dev.html
+index-patched.html
+server-dev.mjs
+extract-kq.cjs
+extract_scripts.py
+*.spec.cjs
+playwright.config.cjs
